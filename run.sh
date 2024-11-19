@@ -8,6 +8,6 @@ if [ -z "$1" -o -z "$2" ]; then
   exit 1
 
 fi
-cd "${PWD}/$1/$2"
+cd "${PWD}/$year/$day"
 
 go run . 
