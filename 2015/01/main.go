@@ -6,7 +6,7 @@ import (
 	_ "embed"
 	"strings"
 
-	"github.com/wodore/advent-of-code-go/util"
+	"github.com/wodorek/advent-of-code-go/util"
 )
 
 //go:embed input.txt
