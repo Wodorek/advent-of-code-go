@@ -1,6 +1,14 @@
 package main
 
-import "github.com/wodorek/advent-of-code-go/util"
+import (
+	_ "embed"
+	"strings"
+
+	"github.com/wodorek/advent-of-code-go/util"
+)
+
+//go:embed input.txt
+var input string
 
 func main() {
 	util.PrintSolution(1, p1())
@@ -13,4 +21,16 @@ func p1() string {
 
 func p2() string {
 	return ""
+}
+
+func prepareInput() [][]int {
+	split := strings.Split(input, "\n")
+
+	result := make([][]int, 0)
+
+	for _, val := range split {
+
+	}
+
+	return result
 }
