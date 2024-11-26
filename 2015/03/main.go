@@ -54,7 +54,37 @@ func moveTo(locations map[string]int, x, y int) {
 }
 
 func p2() string {
-	return ""
+	moves := map[string][]int{
+		"^": {0, 1},
+		"v": {0, -1},
+		">": {1, 0},
+		"<": {-1, 0},
+	}
+
+	inputArr := prepareInput()
+	locations := make(map[string]int)
+	locations["0,0"] = 1
+	santaCurrX := 0
+	santaCurrY := 0
+	roboCurrX := 0
+	roboCurrY := 0
+
+	for i, move := range inputArr {
+		coords := moves[move]
+		x, y := coords[0], coords[1]
+		if i%2 == 0 {
+			santaCurrY += y
+			santaCurrX += x
+			moveTo(locations, santaCurrX, santaCurrY)
+		} else {
+			roboCurrY += y
+			roboCurrX += x
+			moveTo(locations, roboCurrX, roboCurrY)
+
+		}
+	}
+
+	return fmt.Sprintf("%v", len(locations))
 }
 
 func prepareInput() []string {
