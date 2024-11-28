@@ -31,7 +31,15 @@ func p1(arr []string) string {
 }
 
 func p2(arr []string) string {
-	return ""
+	totalNice := 0
+
+	for _, str := range arr {
+		if testStringNice2(str) {
+			totalNice++
+		}
+	}
+
+	return strconv.Itoa(totalNice)
 }
 
 func prepareInput() []string {
@@ -63,4 +71,25 @@ func testStringNice1(str string) bool {
 	}
 
 	return vowels >= 3 && hasDouble && !notForbidden
+}
+
+func testStringNice2(str string) bool {
+	//screw regexp
+	hasSandwich := false
+	hasDouble := false
+
+	for i := 0; i < len(str)-2; i++ {
+		if str[i] == str[i+2] {
+			hasSandwich = true
+		}
+	}
+
+	for i := 0; i < len(str)-1; i++ {
+		if strings.Contains(str[i+2:], str[i:i+2]) {
+			hasDouble = true
+		}
+	}
+
+	return hasDouble && hasSandwich
+
 }
