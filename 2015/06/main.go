@@ -102,13 +102,8 @@ func p2(ops []operation) string {
 					if matrix[y][x] > 0 {
 						matrix[y][x]--
 					}
-
 				case "toggle":
-					if matrix[y][x] == 0 {
-						matrix[y][x] = 1
-					} else {
-						matrix[y][x] = 0
-					}
+					matrix[y][x] += 2
 				}
 			}
 		}
