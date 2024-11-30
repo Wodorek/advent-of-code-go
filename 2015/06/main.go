@@ -91,5 +91,35 @@ func p1(ops []operation) string {
 }
 
 func p2(ops []operation) string {
-	return ""
+	matrix := [1000][1000]int{}
+	for _, op := range ops {
+		for y := op.y.from; y <= op.y.to; y++ {
+			for x := op.x.from; x <= op.x.to; x++ {
+				switch op.what {
+				case "on":
+					matrix[y][x]++
+				case "off":
+					if matrix[y][x] > 0 {
+						matrix[y][x]--
+					}
+
+				case "toggle":
+					if matrix[y][x] == 0 {
+						matrix[y][x] = 1
+					} else {
+						matrix[y][x] = 0
+					}
+				}
+			}
+		}
+	}
+
+	totalBrightness := 0
+
+	for i := range matrix {
+		for _, y := range matrix[i] {
+			totalBrightness += y
+		}
+	}
+	return strconv.Itoa(totalBrightness)
 }
