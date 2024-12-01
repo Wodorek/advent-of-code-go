@@ -9,3 +9,4 @@ To run the solutions, you need to provide your own user input, in the correct ye
 Some solutions have tests set up to test helper functions, for example when parsing input requires more complex operations. To run those test run the provided script:
 
 `./test.sh <year> <day>`
+r
