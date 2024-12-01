@@ -48,7 +48,7 @@ func parseInput(inputStr string) ([][]int, error) {
 }
 
 func p1(inputArr [][]int) string {
-	fmt.Println(inputArr)
+
 	sort.Slice(inputArr[0], func(a, b int) bool {
 		return inputArr[0][a] < inputArr[0][b]
 	})
@@ -58,10 +58,34 @@ func p1(inputArr [][]int) string {
 
 	totalDistance := 0.0
 
-	for i, _ := range inputArr[0] {
+	for i := range inputArr[0] {
 		diff := math.Abs(float64(inputArr[0][i]) - float64(inputArr[1][i]))
 
 		totalDistance += diff
 	}
 	return strconv.Itoa(int(totalDistance))
+}
+
+func p2(inputArr [][]int) string {
+	occurencesMap := make(map[int]int)
+
+	for _, item := range inputArr[1] {
+		_, ok := occurencesMap[item]
+		if ok {
+			occurencesMap[item]++
+		} else {
+			occurencesMap[item] += 1
+		}
+	}
+
+	totalScore := 0
+
+	for _, item := range inputArr[0] {
+		count, ok := occurencesMap[item]
+		if ok {
+			totalScore += count * item
+		}
+	}
+
+	return strconv.Itoa(totalScore)
 }
