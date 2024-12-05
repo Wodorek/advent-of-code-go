@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -74,8 +73,6 @@ func p2(inputArr [][]string, directions [][][2]int) string {
 				neighs := util.GetNeighborsDiagonal(inputArr, x, y, nil)
 				str1 = neighs[0][0] + str1 + neighs[2][2]
 				str2 = neighs[2][0] + str2 + neighs[0][2]
-
-				fmt.Println(str1, str2)
 
 				if (str1 == "MAS" || str1 == "SAM") && (str2 == "MAS" || str2 == "SAM") {
 					totalStrings++
