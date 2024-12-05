@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -20,6 +21,7 @@ func main() {
 		{{1, -1}, {1, 0}, {1, 1}}}
 
 	util.PrintSolution(1, p1(inputArr, directions))
+	util.PrintSolution(2, p2(inputArr, directions))
 
 }
 
@@ -52,6 +54,31 @@ func p1(inputArr [][]string, directions [][][2]int) string {
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+
+	return strconv.Itoa(totalStrings)
+}
+
+func p2(inputArr [][]string, directions [][][2]int) string {
+	totalStrings := 0
+
+	for y := range inputArr {
+		for x := range inputArr[y] {
+			if inputArr[y][x] == "A" {
+				str1 := "A"
+				str2 := "A"
+
+				neighs := util.GetNeighborsDiagonal(inputArr, x, y, nil)
+				str1 = neighs[0][0] + str1 + neighs[2][2]
+				str2 = neighs[2][0] + str2 + neighs[0][2]
+
+				fmt.Println(str1, str2)
+
+				if (str1 == "MAS" || str1 == "SAM") && (str2 == "MAS" || str2 == "SAM") {
+					totalStrings++
 				}
 			}
 		}
