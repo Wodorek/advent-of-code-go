@@ -20,7 +20,7 @@ func main() {
 		{{1, -1}, {1, 0}, {1, 1}}}
 
 	util.PrintSolution(1, p1(inputArr, directions))
-	util.PrintSolution(2, p2(inputArr, directions))
+	util.PrintSolution(2, p2(inputArr))
 
 }
 
@@ -61,7 +61,7 @@ func p1(inputArr [][]string, directions [][][2]int) string {
 	return strconv.Itoa(totalStrings)
 }
 
-func p2(inputArr [][]string, directions [][][2]int) string {
+func p2(inputArr [][]string) string {
 	totalStrings := 0
 
 	for y := range inputArr {
