@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
 	"slices"
 	"strconv"
 	"strings"
@@ -32,7 +33,6 @@ func p1(inputArr rules) string {
 			parsedRules[key] = append(parsedRules[key], beAfter)
 		}
 	}
-
 	totalMiddles := 0
 
 	for _, update := range inputArr.updates {
@@ -60,7 +60,32 @@ func p1(inputArr rules) string {
 
 func p2(inputArr rules) string {
 
+	parsedRules := make(map[int][]int)
+
+	for _, order := range inputArr.ordering {
+		key := order[0]
+		beAfter := order[1]
+
+		if _, ok := parsedRules[key]; !ok {
+			parsedRules[key] = []int{beAfter}
+		} else {
+			parsedRules[key] = append(parsedRules[key], beAfter)
+		}
+	}
+
+	// orderedArr := make([]int, 300)
+
+	for k, r := range parsedRules {
+		fmt.Println(k, ":", r)
+	}
+
+	return ""
 }
+
+// func fixUpdate(update []int, rules map[int][]int) []int {
+
+// 	return []int{}
+// }
 
 func prepareInput(inputStr string) rules {
 	rules := rules{ordering: [][]int{}, updates: [][]int{}}
