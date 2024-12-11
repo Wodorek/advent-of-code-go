@@ -15,6 +15,7 @@ var input string
 func main() {
 	inputArr := prepareInput(input)
 	util.PrintSolution(1, p1(inputArr))
+	util.PrintSolution(2, p2(inputArr))
 }
 
 func p1(inputArr rules) string {
@@ -55,6 +56,10 @@ func p1(inputArr rules) string {
 	}
 
 	return strconv.Itoa(totalMiddles)
+}
+
+func p2(inputArr rules) string {
+
 }
 
 func prepareInput(inputStr string) rules {
