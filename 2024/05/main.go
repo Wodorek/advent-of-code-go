@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -17,7 +18,43 @@ func main() {
 }
 
 func p1(inputArr rules) string {
-	return ""
+
+	parsedRules := make(map[int][]int)
+
+	for _, order := range inputArr.ordering {
+		key := order[0]
+		beAfter := order[1]
+
+		if _, ok := parsedRules[key]; !ok {
+			parsedRules[key] = []int{beAfter}
+		} else {
+			parsedRules[key] = append(parsedRules[key], beAfter)
+		}
+	}
+
+	totalMiddles := 0
+
+	for _, update := range inputArr.updates {
+		isCorrect := true
+		for i := 0; i < len(update)-1; i++ {
+			left := update[i]
+			right := update[i+1]
+
+			if rules, ok := parsedRules[left]; ok {
+				if !slices.Contains(rules, right) {
+					isCorrect = false
+				}
+			} else {
+				isCorrect = false
+			}
+		}
+
+		if isCorrect {
+			totalMiddles += update[int(float64(len(update)/2))]
+		}
+	}
+
+	return strconv.Itoa(totalMiddles)
 }
 
 func prepareInput(inputStr string) rules {
