@@ -109,9 +109,19 @@ func (e *equation) checkPossibleP2() bool {
 		for _, val := range possibleValues {
 			newValues = append(newValues, val*e.operators[i])
 			newValues = append(newValues, val+e.operators[i])
+			newValues = append(newValues, concatNums(val, e.operators[i]))
 		}
 		possibleValues = newValues
 	}
 
 	return slices.Contains(possibleValues, e.value)
+}
+
+func concatNums(a, b int) int {
+	result, err := strconv.Atoi(fmt.Sprintf("%d%d", a, b))
+	if err != nil {
+		return 0
+	}
+
+	return result
 }
