@@ -17,12 +17,24 @@ func main() {
 	inputArr := parseInput(input)
 
 	util.PrintSolution(1, p1(inputArr))
+	util.PrintSolution(2, p2(inputArr))
 }
 
 func p1(inputArr []equation) string {
 	totalValue := 0
 	for _, equation := range inputArr {
 		if equation.checkPossibleP1() {
+			totalValue += equation.value
+		}
+	}
+
+	return strconv.Itoa(totalValue)
+}
+
+func p2(inputArr []equation) string {
+	totalValue := 0
+	for _, equation := range inputArr {
+		if equation.checkPossibleP2() {
 			totalValue += equation.value
 		}
 	}
@@ -71,6 +83,23 @@ type equation struct {
 }
 
 func (e *equation) checkPossibleP1() bool {
+	possibleValues := make([]int, 0)
+	possibleValues = append(possibleValues, e.operators[0])
+
+	for i := 1; i < len(e.operators); i++ {
+		newValues := make([]int, 0)
+
+		for _, val := range possibleValues {
+			newValues = append(newValues, val*e.operators[i])
+			newValues = append(newValues, val+e.operators[i])
+		}
+		possibleValues = newValues
+	}
+
+	return slices.Contains(possibleValues, e.value)
+}
+
+func (e *equation) checkPossibleP2() bool {
 	possibleValues := make([]int, 0)
 	possibleValues = append(possibleValues, e.operators[0])
 
