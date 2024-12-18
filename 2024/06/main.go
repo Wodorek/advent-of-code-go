@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -11,9 +12,12 @@ import (
 //go:embed input.txt
 var input string
 
+var initial []int
+
 func main() {
 	inputArr := parseInput(input)
 	util.PrintSolution(1, p1(inputArr))
+	util.PrintSolution(2, p2(inputArr))
 
 }
 
@@ -26,6 +30,8 @@ func p1(inputArr [][]string) string {
 		for x, char := range row {
 			if char == "^" {
 				guard.setPosition(x, y)
+				initial = []int{x, y}
+				fmt.Println(x, y)
 			}
 		}
 	}
@@ -37,7 +43,7 @@ func p1(inputArr [][]string) string {
 		guard.move(inputArr)
 	}
 
-	totalVisited := 0
+	totalVisited := 1
 
 	for _, row := range inputArr {
 		for _, char := range row {
@@ -50,12 +56,76 @@ func p1(inputArr [][]string) string {
 	return strconv.Itoa(totalVisited)
 }
 
+func p2(inputArr [][]string) string {
+
+	for y, line := range inputArr {
+		for x, char := range line {
+			if char == "X" {
+
+				if x > 0 && inputArr[y][x-1] != "#" {
+					inputArr[y][x-1] = "X"
+				}
+				if x < len(inputArr[y])-1 && inputArr[y][x+1] != "#" {
+					inputArr[y][x+1] = "X"
+				}
+				if y > 0 && inputArr[y-1][x] != "#" {
+					inputArr[y-1][x] = "X"
+				}
+				if y < len(inputArr)-1 && inputArr[y+1][x] != "#" {
+					inputArr[y+1][x] = "X"
+				}
+			}
+		}
+	}
+
+	totalLoops := 0
+
+	guard := guard{exited: false}
+	guard.facing.x = 0
+	guard.facing.y = -1
+	guard.initial.x = initial[0]
+	guard.initial.y = initial[1]
+
+	for y, row := range inputArr {
+		for x, char := range row {
+			if char == "^" {
+				guard.setInitialPosition(x, y)
+			}
+		}
+	}
+
+	for y, line := range inputArr {
+		for x, char := range line {
+			if char == "X" {
+				guard.reset()
+				inputArr[y][x] = "#"
+				for i := 0; i < 10000; i++ {
+					guard.move(inputArr)
+
+				}
+
+				if !guard.exited {
+					totalLoops++
+				}
+				inputArr[y][x] = "X"
+				guard.reset()
+			}
+		}
+	}
+
+	return strconv.Itoa(totalLoops)
+}
+
 type guard struct {
 	position struct {
 		x int
 		y int
 	}
 	facing struct {
+		x int
+		y int
+	}
+	initial struct {
 		x int
 		y int
 	}
@@ -86,6 +156,19 @@ func (g *guard) setPosition(x, y int) {
 	g.position.y = y
 }
 
+func (g *guard) setInitialPosition(x, y int) {
+	g.initial.x = x
+	g.initial.y = y
+}
+
+func (g *guard) reset() {
+	g.position.x = g.initial.x
+	g.position.y = g.initial.y
+	g.exited = false
+	g.facing.x = 0
+	g.facing.y = -1
+}
+
 func (g *guard) move(matrix [][]string) {
 	if g.position.x+g.facing.x > len(matrix[0])-1 ||
 		g.position.x+g.facing.x < 0 ||
@@ -98,12 +181,12 @@ func (g *guard) move(matrix [][]string) {
 
 	if matrix[g.position.y+g.facing.y][g.position.x+g.facing.x] == "#" {
 		g.rotate()
+		return
 	}
 
 	matrix[g.position.y][g.position.x] = "X"
 	g.position.x += g.facing.x
 	g.position.y += g.facing.y
-	matrix[g.position.y][g.position.x] = "^"
 }
 
 func parseInput(inputString string) [][]string {
