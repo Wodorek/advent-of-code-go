@@ -39,8 +39,23 @@ func p1(inputArr map[string][][]int) string {
 	return strconv.Itoa(len(allNodes))
 }
 
+//need to add the node itself
+
 func p2(inputArr map[string][][]int) string {
-	return ""
+	allNodes := make(map[string]string)
+
+	for _, v := range inputArr {
+		antinodes := makeAntinodesP2(v)
+
+		for _, node := range antinodes {
+			if checkNodeInRange(node, maxY, maxX) {
+				key := fmt.Sprintf("%d,%d", node[0], node[1])
+				allNodes[key] = "x"
+			}
+		}
+	}
+
+	return strconv.Itoa(len(allNodes))
 }
 
 func makeAntinode(a1, a2 []int) [][]int {
@@ -50,6 +65,21 @@ func makeAntinode(a1, a2 []int) [][]int {
 	return [][]int{{a1[0] + dy, a1[1] + dx}, {a2[0] - dy, a2[1] - dx}}
 }
 
+func makeAntinodeP2(a1, a2 []int) [][]int {
+
+	dy := a1[0] - a2[0]
+	dx := a1[1] - a2[1]
+
+	nodes := make([][]int, 0)
+
+	for i := 0; i < 30; i++ {
+		nodes = append(nodes, [][]int{{a1[0] + (dy * i), a1[1] + (dx * i)}, {a2[0] - (dy * i), a2[1] - (dx * i)}}...)
+	}
+
+	return nodes
+
+}
+
 func makeAntinodes(antennas [][]int) [][]int {
 	nodes := make([][]int, 0)
 
@@ -57,6 +87,20 @@ func makeAntinodes(antennas [][]int) [][]int {
 		for j := i + 1; j < len(antennas); j++ {
 
 			newNodes := makeAntinode(antennas[i], antennas[j])
+			nodes = append(nodes, newNodes...)
+		}
+	}
+
+	return nodes
+}
+
+func makeAntinodesP2(antennas [][]int) [][]int {
+	nodes := make([][]int, 0)
+
+	for i := 0; i < len(antennas); i++ {
+		for j := i + 1; j < len(antennas); j++ {
+
+			newNodes := makeAntinodeP2(antennas[i], antennas[j])
 			nodes = append(nodes, newNodes...)
 		}
 	}
