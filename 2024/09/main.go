@@ -70,7 +70,75 @@ func p1(inputArr []int) string {
 }
 
 func p2(inputArr []int) string {
-	return ""
+
+	type diskBlock struct {
+		size           int
+		value          int
+		positionOnDisk int
+		spacesLeft     int
+		insertedVals   []int
+		used           bool
+	}
+
+	emptyBlocks := []diskBlock{}
+	valueBlocks := []diskBlock{}
+
+	currId := 0
+
+	for i, val := range inputArr {
+		if i%2 == 0 {
+			valueBlocks = append(valueBlocks, diskBlock{size: val, value: currId, positionOnDisk: i, spacesLeft: 0})
+			currId++
+		} else {
+			emptyBlocks = append(emptyBlocks, diskBlock{size: val, value: -1, positionOnDisk: i, spacesLeft: val, insertedVals: make([]int, 0), used: false})
+		}
+	}
+
+	for i := len(valueBlocks) - 1; i >= 0; i-- {
+		currVal := &valueBlocks[i]
+
+		for j := 0; j <= len(emptyBlocks)-1; j++ {
+			currEmpty := &emptyBlocks[j]
+
+			if currEmpty.spacesLeft >= currVal.size {
+				(*currEmpty).spacesLeft -= currVal.size
+				(*currEmpty).insertedVals = append((*currEmpty).insertedVals, slices.Repeat([]int{currVal.value}, currVal.size)...)
+				(*currVal).value = -1
+				break
+			}
+		}
+	}
+
+	newBuffer := make([]int, 0)
+
+	valIdx := 0
+	emptyIdx := 0
+
+	for i := 0; i <= (len(emptyBlocks) + len(valueBlocks) - 2); i++ {
+		if i%2 == 0 {
+			newBuffer = append(newBuffer, slices.Repeat([]int{valueBlocks[valIdx].value}, valueBlocks[valIdx].size)...)
+			valIdx++
+		} else {
+			newBuffer = append(newBuffer, emptyBlocks[emptyIdx].insertedVals...)
+			if emptyBlocks[emptyIdx].spacesLeft > 0 {
+				newBuffer = append(newBuffer, slices.Repeat([]int{-1}, emptyBlocks[emptyIdx].spacesLeft)...)
+			}
+			emptyIdx++
+		}
+	}
+
+	total := 0
+
+	for i, val := range newBuffer {
+		if val == -1 {
+			continue
+		}
+
+		total += i * val
+	}
+
+	return strconv.Itoa(total)
+
 }
 
 func parseInput(inputString string) []int {
