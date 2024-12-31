@@ -54,7 +54,37 @@ func p1(inputArr []int) string {
 }
 
 func p2(inputArr []int) string {
-	return ""
+
+	stones := make([]int, len(inputArr))
+	copy(stones, inputArr)
+
+	for i := 0; i < 75; i++ {
+		newStones := make([]int, 0)
+		for _, stone := range stones {
+			if stone == 0 {
+				newStones = append(newStones, 1)
+			} else if len(fmt.Sprintf("%d", stone))%2 == 0 {
+				asStr := strconv.Itoa(stone)
+				left, right := asStr[0:len(asStr)/2], asStr[len(asStr)/2:]
+				leftInt, err := strconv.Atoi(left)
+				if err != nil {
+					fmt.Println(err)
+				}
+				rightInt, err := strconv.Atoi(right)
+				if err != nil {
+					fmt.Println(err)
+				}
+				newStones = append(newStones, leftInt, rightInt)
+			} else {
+				newStones = append(newStones, (stone * 2024))
+			}
+		}
+
+		stones = newStones
+
+	}
+
+	return fmt.Sprintf("%d", len(stones))
 }
 
 func parseInput(inputString string) []int {
