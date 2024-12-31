@@ -70,28 +70,6 @@ func traverseTrailp1(inputArr [][]int, currHead *trail, currNode trail, nextVal 
 
 }
 
-func traverseTrailp2(inputArr [][]int, currHead *trail, currNode trail, nextVal int) {
-	neigbors := getNeighborsCardinal(inputArr, currNode.x, currNode.y)
-	matchingNeighbors := make([]trail, 0)
-	for _, neigh := range neigbors {
-		if neigh.value == nextVal {
-			matchingNeighbors = append(matchingNeighbors, neigh)
-		}
-	}
-
-	if nextVal == 9 {
-		for _, match := range matchingNeighbors {
-			key := fmt.Sprintf("%d,%d", match.x, match.y)
-			(*currHead).arrivesTo[key] = 1
-		}
-	} else {
-		for _, match := range matchingNeighbors {
-			traverseTrailp2(inputArr, currHead, match, nextVal+1)
-		}
-	}
-
-}
-
 func p2(inputArr [][]int) string {
 	trailHeads := make([]trail, 0)
 
@@ -105,7 +83,7 @@ func p2(inputArr [][]int) string {
 
 	total := 0
 	for _, trailHead := range trailHeads {
-		traverseTrailp2(inputArr, &trailHead, trailHead, 1)
+		traverseTrailp2(inputArr, &total, trailHead, 1)
 	}
 
 	for _, t := range trailHeads {
@@ -113,6 +91,26 @@ func p2(inputArr [][]int) string {
 	}
 
 	return strconv.Itoa(total)
+}
+
+func traverseTrailp2(inputArr [][]int, total *int, currNode trail, nextVal int) {
+	neigbors := getNeighborsCardinal(inputArr, currNode.x, currNode.y)
+	matchingNeighbors := make([]trail, 0)
+	for _, neigh := range neigbors {
+		if neigh.value == nextVal {
+			matchingNeighbors = append(matchingNeighbors, neigh)
+		}
+	}
+
+	if nextVal == 9 {
+		(*total) += len(matchingNeighbors)
+
+	} else {
+		for _, match := range matchingNeighbors {
+			traverseTrailp2(inputArr, total, match, nextVal+1)
+		}
+	}
+
 }
 
 func parseInput(inputString string) [][]int {
