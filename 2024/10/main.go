@@ -38,7 +38,7 @@ func p1(inputArr [][]int) string {
 
 	total := 0
 	for _, trailHead := range trailHeads {
-		traverseTrail(inputArr, &trailHead, trailHead, 1)
+		traverseTrailp1(inputArr, &trailHead, trailHead, 1)
 	}
 
 	for _, t := range trailHeads {
@@ -48,7 +48,7 @@ func p1(inputArr [][]int) string {
 	return strconv.Itoa(total)
 }
 
-func traverseTrail(inputArr [][]int, currHead *trail, currNode trail, nextVal int) {
+func traverseTrailp1(inputArr [][]int, currHead *trail, currNode trail, nextVal int) {
 	neigbors := getNeighborsCardinal(inputArr, currNode.x, currNode.y)
 	matchingNeighbors := make([]trail, 0)
 	for _, neigh := range neigbors {
@@ -64,14 +64,55 @@ func traverseTrail(inputArr [][]int, currHead *trail, currNode trail, nextVal in
 		}
 	} else {
 		for _, match := range matchingNeighbors {
-			traverseTrail(inputArr, currHead, match, nextVal+1)
+			traverseTrailp1(inputArr, currHead, match, nextVal+1)
+		}
+	}
+
+}
+
+func traverseTrailp2(inputArr [][]int, currHead *trail, currNode trail, nextVal int) {
+	neigbors := getNeighborsCardinal(inputArr, currNode.x, currNode.y)
+	matchingNeighbors := make([]trail, 0)
+	for _, neigh := range neigbors {
+		if neigh.value == nextVal {
+			matchingNeighbors = append(matchingNeighbors, neigh)
+		}
+	}
+
+	if nextVal == 9 {
+		for _, match := range matchingNeighbors {
+			key := fmt.Sprintf("%d,%d", match.x, match.y)
+			(*currHead).arrivesTo[key] = 1
+		}
+	} else {
+		for _, match := range matchingNeighbors {
+			traverseTrailp2(inputArr, currHead, match, nextVal+1)
 		}
 	}
 
 }
 
 func p2(inputArr [][]int) string {
-	return ""
+	trailHeads := make([]trail, 0)
+
+	for y := 0; y < len(inputArr); y++ {
+		for x := 0; x < len(inputArr[0]); x++ {
+			if inputArr[y][x] == 0 {
+				trailHeads = append(trailHeads, trail{0, x, y, make(map[string]int)})
+			}
+		}
+	}
+
+	total := 0
+	for _, trailHead := range trailHeads {
+		traverseTrailp2(inputArr, &trailHead, trailHead, 1)
+	}
+
+	for _, t := range trailHeads {
+		total += len(t.arrivesTo)
+	}
+
+	return strconv.Itoa(total)
 }
 
 func parseInput(inputString string) [][]int {
