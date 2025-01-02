@@ -27,23 +27,7 @@ func p1(inputArr []int) string {
 	for i := 0; i < 25; i++ {
 		newStones := make([]int, 0)
 		for _, stone := range stones {
-			if stone == 0 {
-				newStones = append(newStones, 1)
-			} else if len(fmt.Sprintf("%d", stone))%2 == 0 {
-				asStr := strconv.Itoa(stone)
-				left, right := asStr[0:len(asStr)/2], asStr[len(asStr)/2:]
-				leftInt, err := strconv.Atoi(left)
-				if err != nil {
-					fmt.Println(err)
-				}
-				rightInt, err := strconv.Atoi(right)
-				if err != nil {
-					fmt.Println(err)
-				}
-				newStones = append(newStones, leftInt, rightInt)
-			} else {
-				newStones = append(newStones, (stone * 2024))
-			}
+			newStones = append(newStones, blinkAtStone(stone)...)
 		}
 
 		stones = newStones
@@ -53,38 +37,60 @@ func p1(inputArr []int) string {
 	return fmt.Sprintf("%d", len(stones))
 }
 
+func blinkAtStone(stone int) []int {
+	newStones := make([]int, 0)
+	if stone == 0 {
+		newStones = append(newStones, 1)
+	} else if len(fmt.Sprintf("%d", stone))%2 == 0 {
+		asStr := strconv.Itoa(stone)
+		left, right := asStr[0:len(asStr)/2], asStr[len(asStr)/2:]
+		leftInt, err := strconv.Atoi(left)
+		if err != nil {
+			fmt.Println(err)
+		}
+		rightInt, err := strconv.Atoi(right)
+		if err != nil {
+			fmt.Println(err)
+		}
+		newStones = append(newStones, leftInt, rightInt)
+	} else {
+		newStones = append(newStones, (stone * 2024))
+	}
+
+	return newStones
+}
+
 func p2(inputArr []int) string {
 
 	stones := make([]int, len(inputArr))
 	copy(stones, inputArr)
 
+	stoneList := make(map[int]int)
+
+	for _, stone := range stones {
+		stoneList[stone] = 1
+	}
+
 	for i := 0; i < 75; i++ {
-		newStones := make([]int, 0)
-		for _, stone := range stones {
-			if stone == 0 {
-				newStones = append(newStones, 1)
-			} else if len(fmt.Sprintf("%d", stone))%2 == 0 {
-				asStr := strconv.Itoa(stone)
-				left, right := asStr[0:len(asStr)/2], asStr[len(asStr)/2:]
-				leftInt, err := strconv.Atoi(left)
-				if err != nil {
-					fmt.Println(err)
-				}
-				rightInt, err := strconv.Atoi(right)
-				if err != nil {
-					fmt.Println(err)
-				}
-				newStones = append(newStones, leftInt, rightInt)
-			} else {
-				newStones = append(newStones, (stone * 2024))
+		newList := make(map[int]int)
+
+		for k, v := range stoneList {
+			newStones := blinkAtStone(k)
+			for _, stone := range newStones {
+				newList[stone] += v
 			}
 		}
 
-		stones = newStones
-
+		stoneList = newList
 	}
 
-	return fmt.Sprintf("%d", len(stones))
+	total := 0
+
+	for _, val := range stoneList {
+		total += val
+	}
+
+	return strconv.Itoa(total)
 }
 
 func parseInput(inputString string) []int {
